@@ -115,7 +115,7 @@ def close_connection(exception):
 	if db is not None:
 		g.db.close()
 
-@app.route('/reply/', methods=['POST'])
+@app.route('/api/reply/', methods=['POST'])
 def gpt_response():
 	check_if_user_exists()
 	json = request.get_json()
@@ -125,7 +125,7 @@ def gpt_response():
 
 	return jsonify(response=chat.provideResponse(user_response), status=chat.retrieveTopicStatus(), answers=chat.retrieveDefinedAnswers())
 
-@app.route('/interview/', methods=['GET'])
+@app.route('/api/interview/', methods=['GET'])
 def initialize_interview():
 	check_if_user_exists()
 	first_answer = request.args.get('first_answer')
@@ -139,7 +139,7 @@ def initialize_interview():
 		return jsonify(response=chat.provideResponse(first_answer), status=chat.retrieveTopicStatus(), answers=chat.retrieveDefinedAnswers())
 	return jsonify(response=chat.provideInitialResponse(), status=chat.retrieveTopicStatus(), answers=chat.retrieveDefinedAnswers())
 
-@app.route('/respondent/', methods=['POST'])
+@app.route('/api/respondent/', methods=['POST'])
 def create_respondent():
 	project = request.headers.get('projectId')
 	external_id = request.headers.get('externalId')
@@ -152,7 +152,7 @@ def create_respondent():
 	g.db.query_database_insert(query,query_params)
 	return jsonify(uuid=generated_uuid, projectId=project)
 
-@app.route('/project/', methods=['GET'])
+@app.route('/api/project/', methods=['GET'])
 def get_project():
 	project = request.headers.get('projectId')
 	query = "SELECT name,logo,colour,welcome_title,welcome_message,success_title,success_message,welcome_second_title,welcome_second_message,consent,cta_next,cta_reply,cta_abort,cta_restart,question_title,answer_title,answer_placeholder,loading,collect_email,email_title,email_placeholder,consent_link,skip_welcome,dark_mode,inline_consent from projects where id=%s"
@@ -173,7 +173,7 @@ def get_project():
 		return jsonify({"error": "Project not found"}), 404
 
 
-@app.route('/quote/', methods=['GET'])
+@app.route('/api/quote/', methods=['GET'])
 def findClose():
 	text = request.args.get('text')
 	project = text = request.args.get('projectid')
@@ -184,7 +184,7 @@ def findClose():
 	ouptut = g.db.query_database_all(query,params)
 	return jsonify(ouptut)
 
-@app.route('/heartbeat/', methods=['GET'])
+@app.route('/api/heartbeat/', methods=['GET'])
 def heartbeat_launch():
 	key = request.args.get('key')
 	if key == '3yTgJUQnPjs4L':
@@ -193,7 +193,7 @@ def heartbeat_launch():
 
 
 
-@app.route('/alike/interview', methods=['GET'])
+@app.route('/api/alike/interview', methods=['GET'])
 def findCloseInterview():
 	text = request.args.get('text')
 	embedding = LLM()
@@ -203,7 +203,7 @@ def findCloseInterview():
 	ouptut = g.db.query_database_all(query,params)
 	return jsonify(ouptut)
 
-@app.route('/topic', methods=['GET'])
+@app.route('/api/topic', methods=['GET'])
 def findTopicChanges():
 	th = topicHandler()
 	ouptut = th.updateResponseCounter()
