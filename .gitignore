@@ -1,0 +1,7 @@
+env
+secrets.py
+credentials.py
+*.pyc
+__pycache__
+Pipfile.lock
+*.csv
